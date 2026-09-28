@@ -5,6 +5,17 @@
   gather_facts: true
 
   tasks:
+    - name: Download Zabbix official GPG key
+      ansible.builtin.get_url:
+        url: https://repo.zabbix.com/zabbix-official-repo.key
+        dest: /tmp/zabbix-official-repo.key
+        mode: '0644'
+
+    - name: Add Zabbix GPG key
+      ansible.builtin.apt_key:
+        file: /tmp/zabbix-official-repo.key
+        state: present
+
     - name: Ensure apt cache is up to date
       ansible.builtin.apt:
         update_cache: true
@@ -14,3 +25,12 @@
       ansible.builtin.apt:
         name: tree
         state: present
+
+    - name: Verify tree is installed
+      ansible.builtin.command: tree --version
+      register: tree_version
+      changed_when: false
+
+    - name: Show tree version
+      ansible.builtin.debug:
+        msg: "{{ tree_version.stdout }}"
