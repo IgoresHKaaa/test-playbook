@@ -1,0 +1,16 @@
+---
+- name: Install tree on Ubuntu
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Ensure apt cache is up to date
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install tree package
+      ansible.builtin.apt:
+        name: tree
+        state: present
