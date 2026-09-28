@@ -5,16 +5,17 @@
   gather_facts: true
 
   tasks:
+    - name: Create directory for GPG keys
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
     - name: Download Zabbix official GPG key
       ansible.builtin.get_url:
         url: https://repo.zabbix.com/zabbix-official-repo.key
-        dest: /tmp/zabbix-official-repo.key
+        dest: /etc/apt/keyrings/zabbix.asc
         mode: '0644'
-
-    - name: Add Zabbix GPG key
-      ansible.builtin.apt_key:
-        file: /tmp/zabbix-official-repo.key
-        state: present
 
     - name: Ensure apt cache is up to date
       ansible.builtin.apt:
